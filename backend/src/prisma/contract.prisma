@@ -1,0 +1,62 @@
+// use prisma-8
+model Country {
+  id     Int     @id @default(autoincrement())
+  name   String
+
+  states State[]
+
+  @@map("country")
+}
+
+model State {
+  id         Int     @id @default(autoincrement())
+  name       String
+  country_id Int
+
+  country    Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
+
+  cities     City[]
+
+  @@map("state")
+}
+
+model City {
+  id            Int           @id @default(autoincrement())
+  name          String
+  state_id      Int
+
+  state         State         @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  UserAddresses UserAddress[]
+
+  @@map("city")
+  @@index([id])
+}
+
+model User {
+  id            Int                        @id @default(autoincrement())
+  email         String                     @unique
+  password_hash String
+  fullname      String
+  address_id    Int
+  created_at    TimestamptzString          @default(now())
+  updated_at    temporal.updatedAtString()
+
+  addresses     UserAddress[]
+
+  @@map("user")
+}
+
+model UserAddress {
+  id         Int                        @id @default(autoincrement())
+  user_id    Int
+  address    String
+  city_id    Int
+  pincode    String
+  created_at TimestamptzString          @default(now())
+  updated_at temporal.updatedAtString()
+
+  user       User                       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  city       City                       @relation(fields: [city_id], references: [id], onDelete: Cascade)
+
+  @@map("user_address")
+}

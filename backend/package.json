@@ -1,0 +1,29 @@
+{
+  "name": "ecomm",
+  "version": "1.0.0",
+  "description": "an end to end ecommerce application",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env index.ts",
+    "build": "tsc",
+    "start": "node --env-file=.env dist/index.js",
+    "contract:emit": "prisma contract emit"
+  },
+  "author": "Adarsh Gupta",
+  "license": "ISC",
+  "devDependencies": {
+    "@prisma/cli-engine": "^0.7.0",
+    "@types/node": "^26.6.5",
+    "prisma": "^8.0.0-rc.23",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/orm-postgres": "^8.0.0-rc.18",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "ua-parser-js": "^2.0.10"
+  }
+}
