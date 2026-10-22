@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// use prisma-7
+model Country {
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime? @db.Timestamptz(3)
+
+  states State[]
+
+  @@map("country")
+}
+
+model State {
+  id         Int       @id @default(autoincrement())
+  name       String
+  country_id Int
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime? @db.Timestamptz(3)
+
+  country Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
+
+  cities City[]
+
+  @@map("state")
+}
+
+model City {
+  id         Int       @id @default(autoincrement())
+  name       String
+  state_id   Int
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime? @db.Timestamptz(3)
+
+  state         State         @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  UserAddresses UserAddress[]
+
+  @@index([id])
+  @@map("city")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password_hash String
+  fullname      String
+  phone         String    @unique
+  address_id    Int?
+  created_at    DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at    DateTime? @db.Timestamptz(3)
+
+  addresses UserAddress[]
+
+  @@map("user")
+}
+
+model UserAddress {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  address    String
+  city_id    Int
+  pincode    String
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime? @db.Timestamptz(3)
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  city City @relation(fields: [city_id], references: [id], onDelete: Cascade)
+
+  @@map("user_address")
+}
